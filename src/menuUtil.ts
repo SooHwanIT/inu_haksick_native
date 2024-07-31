@@ -18,7 +18,7 @@ const fetchMenu = async (url: string): Promise<Menu[]> => {
 
     let newMenu: Menu[] = [];
     const todayIndex = new Date().getDay() % 7; // 일요일이 0이 되도록 조정
-    console.log(`Fetching menu for index: ${todayIndex}`); // 디버깅 로그
+    //console.log(`Fetching menu for index: ${todayIndex}`); // 디버깅 로그
 
     $('#menuBox tbody tr').each((i, row) => {
       if (i === 0) {
@@ -26,7 +26,7 @@ const fetchMenu = async (url: string): Promise<Menu[]> => {
       }
 
       const mealTime = $(row).find('td.corn_nm').text().trim();
-      console.log(`Meal time: ${mealTime}`); // 디버깅 로그
+      //console.log(`Meal time: ${mealTime}`); // 디버깅 로그
 
       $(row).find('td.din_lists, td.din_list').each((j, cell) => {
         if (j === todayIndex) {
@@ -37,7 +37,7 @@ const fetchMenu = async (url: string): Promise<Menu[]> => {
         }
       });
     });
-    console.log(newMenu); // 디버깅 로그
+    //console.log(newMenu); // 디버깅 로그
     return newMenu;
   } catch (error) {
     console.error('Error fetching or parsing HTML:', error);

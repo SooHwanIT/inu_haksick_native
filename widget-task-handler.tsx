@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useState } from "react";
 import type {WidgetTaskHandlerProps} from 'react-native-android-widget';
-import {HelloWidget} from './src/widgets/HaksickWidget.tsx';
+import {HaksickWidget} from './src/widgets/HaksickWidget.tsx';
+import { getMenuFromStorage } from "./src/menuUtil.ts";
+
+interface Menu {
+  mealTime: string;
+  dishes: string[];
+}
 
 const nameToWidget = {
   // Hello will be the **name** with which we will reference our widget.
-  Hello: HelloWidget,
+  Haksick: HaksickWidget,
 };
 
 export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
@@ -18,11 +24,17 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
       break;
 
     case 'WIDGET_UPDATE':
-      // Not needed for now
+      if (widgetInfo.widgetName === 'Haksick') {
+        const data:any = await getMenuFromStorage('studentMenu');
+        console.log("테스트 1 : "+ data);
+        props.renderWidget(<Widget data = {data}/>);
+      } else {
+      }
+      break;
       break;
 
     case 'WIDGET_RESIZED':
-      // Not needed for now
+      props.renderWidget(<Widget />);
       break;
 
     case 'WIDGET_DELETED':

@@ -23,12 +23,8 @@ const App: React.FC = () => {
       const studentMenu = await fetchStudentMenu();
       const professorMenu = await fetchProfessorMenu();
 
-      // 주석 처리: 기존 데이터를 확인하지 않고 항상 새 데이터를 저장
-      // const studentData = await getMenuFromStorage('studentMenu');
-      // const professorData = await getMenuFromStorage('professorMenu');
-
-      // const studentMenu = studentData && studentData.date === currentDate ? studentData.menu : await fetchStudentMenu();
-      // const professorMenu = professorData && professorData.date === currentDate ? professorData.menu : await fetchProfessorMenu();
+      //const studentMenu = studentData && studentData.date === currentDate ? studentData.menu : await fetchStudentMenu();
+      //const professorMenu = professorData && professorData.date === currentDate ? professorData.menu : await fetchProfessorMenu();
 
       await saveMenuToStorage('studentMenu', studentMenu, currentDate);
       await saveMenuToStorage('professorMenu', professorMenu, currentDate);
@@ -71,7 +67,7 @@ const App: React.FC = () => {
       <PaperProvider>
         <View style={styles.container}>
           <Appbar.Header>
-            <Appbar.Content title="식단 메뉴" />
+            <Appbar.Content title="인천대 학식" />
           </Appbar.Header>
           <View style={styles.buttonContainer}>
             <Button mode={menuType === 'student' ? 'contained' : 'outlined'} onPress={() => setMenuType('student')}>학생 식당</Button>
@@ -103,7 +99,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#fff',
     borderRadius: 10,
-    elevation: 3,
+    //elevation: 3,
   },
   dish: {
     fontSize: 16,
