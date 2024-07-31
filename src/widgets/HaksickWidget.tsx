@@ -1,34 +1,183 @@
 import React from 'react';
-import { FlexWidget, ListWidget, TextWidget } from "react-native-android-widget";
+import {
+  FlexWidget,
+  ListWidget,
+  TextWidget,
+} from 'react-native-android-widget';
 
-export function HaksickWidget( data:any ) {
-  console.log(data);
+interface Meal {
+  mealTime: string;
+  dishes: string[];
+}
+
+interface Restaurant {
+  name: string;
+  meals: Meal[];
+}
+
+interface Menu {
+  lastUpdate: string;
+  restaurants: {
+    studentRestaurant: Restaurant[];
+    professorRestaurant: Restaurant[];
+    dining27Restaurant: Restaurant[];
+    dorm1Restaurant: Restaurant[];
+  };
+}
+
+interface HaksickWidgetProps {
+  data: Menu;
+  type: string;
+}
+
+export function HaksickWidget({ data, type }: HaksickWidgetProps) {
+  const haederTapSize = 48;
+  const headerFontSize = 16;
+  const bodyFontSize = 14;
+
+  // type에 따른 레스토랑 데이터 선택
+  const selectedRestaurant = (() => {
+    switch (type) {
+      case 'student':
+        return data.restaurants.studentRestaurant;
+      case 'professor':
+        return data.restaurants.professorRestaurant;
+      case 'dining27':
+        return data.restaurants.dining27Restaurant;
+      case 'dorm1':
+        return data.restaurants.dorm1Restaurant;
+      default:
+        return [];
+    }
+  })();
+
   return (
-    <ListWidget
+    <FlexWidget
       style={{
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        backgroundColor: '#F5F5F5',
         height: 'match_parent',
         width: 'match_parent',
-        backgroundColor: '#1F3529',
+        borderRadius: 4,
+        flexDirection: 'column',
       }}
     >
-      {Array.from({ length: 5 }).map((_, i) => (
+      {/* 해더 */}
+      <FlexWidget
+        style={{
+          backgroundColor: '#3A3A3A',
+          height: haederTapSize,
+          width: 'match_parent',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'row',
+        }}
+      >
+        {/* 학생 식당 */}
         <FlexWidget
-          key={i}
+          clickAction="CHANGE_MENU"
+          clickActionData={{ id: 'student' }}
           style={{
-            width: 'match_parent',
+            flex: 1,
+            height: haederTapSize,
             alignItems: 'center',
-            flexDirection: 'row',
             justifyContent: 'center',
-            padding: 8,
-          }}
-          clickAction="OPEN_URI"
-          clickActionData={{
-            uri: `androidwidgetexample://list/list-demo/${i + 1}`,
+            backgroundColor: type === 'student' ? '#007AFF' : '#6E6E6E',
           }}
         >
-          <TextWidget text={`React Native Android Widget Release 0.${i + 1}`} />
+          <TextWidget style={{ fontSize: headerFontSize, color: '#FFFFFF' }} text="학생 식당" />
         </FlexWidget>
-      ))}
-    </ListWidget>
+        {/* 교수 식당 */}
+        <FlexWidget
+          clickAction="CHANGE_MENU"
+          clickActionData={{ id: 'professor' }}
+          style={{
+            flex: 1,
+            height: haederTapSize,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: type === 'professor' ? '#007AFF' : '#6E6E6E',
+          }}
+        >
+          <TextWidget style={{ fontSize: headerFontSize, color: '#FFFFFF' }} text="교수 식당" />
+        </FlexWidget>
+
+        {/* 27호관 식당 */}
+        <FlexWidget
+          clickAction="CHANGE_MENU"
+          clickActionData={{ id: 'dining27' }}
+          style={{
+            flex: 1,
+            height: haederTapSize,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: type === 'dining27' ? '#007AFF' : '#6E6E6E',
+          }}
+        >
+          <TextWidget style={{ fontSize: headerFontSize, color: '#FFFFFF' }} text="27호관 식당" />
+        </FlexWidget>
+
+        {/* 1기숙사 식당 */}
+        <FlexWidget
+          clickAction="CHANGE_MENU"
+          clickActionData={{ id: 'dorm1' }}
+          style={{
+            flex: 1,
+            height: haederTapSize,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: type === 'dorm1' ? '#007AFF' : '#6E6E6E',
+          }}
+        >
+          <TextWidget style={{ fontSize: headerFontSize, color: '#FFFFFF' }} text="1기숙사 식당" />
+        </FlexWidget>
+      </FlexWidget>
+
+      {/* 선택된 식당의 메뉴 리스트 */}
+      <ListWidget
+        style={{
+          height: 'match_parent',
+          width: 'match_parent',
+          backgroundColor: '#ffffff',
+        }}
+      >
+        {selectedRestaurant[0]?.meals.map((item, i) => (
+          <FlexWidget
+            key={`meal-${i}`}
+            style={{
+              paddingBottom: 24,
+              height: 'match_parent',
+              width: 'match_parent',
+              alignItems: 'center', // 중앙 정렬
+              //textAlign: 'center', // 텍스트 중앙 정렬
+            }}
+          >
+            <TextWidget
+              style={{
+                fontSize: headerFontSize + 8, // mealTime 글씨 크기 키움
+                fontWeight: 'bold',
+                marginBottom: 8,
+                color: '#333333',
+                textAlign: 'center', // 텍스트 중앙 정렬
+              }}
+              text={item.mealTime}
+            />
+            {item.dishes.map((meal, j) => (
+              <TextWidget
+                key={`dish-${i}-${j}`}
+                style={{
+                  fontSize: bodyFontSize,
+                  color: '#555555',
+                  textAlign: 'center', // 텍스트 중앙 정렬
+                }}
+                text={meal}
+              />
+            ))}
+          </FlexWidget>
+        ))}
+
+      </ListWidget>
+    </FlexWidget>
   );
 }

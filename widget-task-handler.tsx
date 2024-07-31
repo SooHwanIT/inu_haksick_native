@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
 import type {WidgetTaskHandlerProps} from 'react-native-android-widget';
 import {HaksickWidget} from './src/widgets/HaksickWidget.tsx';
-import { getMenuFromStorage } from "./src/menuUtil.ts";
+import getMenuData, {
+  fetchStudentMenu,
+  getMenuFromStorage,
+} from './src/menuUtil.ts';
 
 interface Menu {
   mealTime: string;
@@ -20,17 +23,21 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
 
   switch (props.widgetAction) {
     case 'WIDGET_ADDED':
-      props.renderWidget(<Widget />);
+      if (widgetInfo.widgetName === 'Haksick') {
+        const data = await getMenuData();
+        console.log(data); // 데이터를 콘솔에 출력
+        props.renderWidget(<Widget data={data} type={'student'} />);
+      } else {
+      }
       break;
 
     case 'WIDGET_UPDATE':
       if (widgetInfo.widgetName === 'Haksick') {
-        const data:any = await getMenuFromStorage('studentMenu');
-        console.log("테스트 1 : "+ data);
-        props.renderWidget(<Widget data = {data}/>);
+        const data = await getMenuData();
+        console.log(data); // 데이터를 콘솔에 출력
+        props.renderWidget(<Widget data={data} type={'student'} />);
       } else {
       }
-      break;
       break;
 
     case 'WIDGET_RESIZED':
@@ -42,7 +49,13 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
       break;
 
     case 'WIDGET_CLICK':
-      // Not needed for now
+      if (props.clickAction === 'CHANGE_MENU') {
+        // Do stuff when primitive with `clickAction="MY_ACTION"` is clicked
+        // props.clickActionData === { id: 0 }
+        const data = await getMenuData();
+        props.renderWidget(<Widget data={data} type={props.clickActionData?.id} />);
+        console.log(props.clickActionData?.id);
+      }
       break;
 
     default:
