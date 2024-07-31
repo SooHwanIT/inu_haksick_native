@@ -4,7 +4,7 @@
                     android:minHeight="120dp"
 
                     android:targetCellWidth="5"
-                    android:targetCellHeight="2"
+                    android:targetCellHeight="3"
 
                     android:updatePeriodMillis="0"
 
@@ -13,7 +13,7 @@
                     android:previewImage="@drawable/haksick_preview"
                     android:description="@string/widget_haksick_description"
 
-                    android:resizeMode="none"
+                    android:resizeMode="vertical"
 
                     android:widgetCategory="home_screen">
 </appwidget-provider>

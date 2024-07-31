@@ -31,9 +31,9 @@ interface HaksickWidgetProps {
 }
 
 export function HaksickWidget({ data, type }: HaksickWidgetProps) {
-  const haederTapSize = 48;
+  const haederTapSize = 42;
   const headerFontSize = 16;
-  const bodyFontSize = 14;
+  const bodyFontSize = 13;
 
   // type에 따른 레스토랑 데이터 선택
   const selectedRestaurant = (() => {
@@ -146,10 +146,11 @@ export function HaksickWidget({ data, type }: HaksickWidgetProps) {
           <FlexWidget
             key={`meal-${i}`}
             style={{
-              paddingBottom: 24,
-              height: 'match_parent',
+              //paddingBottom: 24,
+              //height: 'match_parent',
               width: 'match_parent',
               alignItems: 'center', // 중앙 정렬
+              borderBottomWidth: 1,
               //textAlign: 'center', // 텍스트 중앙 정렬
             }}
           >
