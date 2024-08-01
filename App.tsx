@@ -158,12 +158,12 @@ const App = () => {
                 />
               )}
             </Tab.Screen>
-            {/*<Tab.Screen name="1기숙사 Dining">*/}
-            {/*  {() => <DiningScreen data={menuData?.restaurants.dorm1Restaurant || []} />}*/}
-            {/*</Tab.Screen>*/}
             <Tab.Screen name="1기숙사 Dining">
-              {() => <HaksickWidgetPreviewScreen />}
+              {() => <DiningScreen data={menuData?.restaurants.dorm1Restaurant || []} />}
             </Tab.Screen>
+            {/*<Tab.Screen name="1기숙사 Dining">*/}
+            {/*  {() => <HaksickWidgetPreviewScreen />}*/}
+            {/*</Tab.Screen>*/}
           </Tab.Navigator>
         </SafeAreaProvider>
       </NavigationContainer>

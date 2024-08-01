@@ -41,7 +41,12 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
       break;
 
     case 'WIDGET_RESIZED':
-      props.renderWidget(<Widget />);
+      if (widgetInfo.widgetName === 'Haksick') {
+        const data = await getMenuData();
+        console.log(data); // 데이터를 콘솔에 출력
+        props.renderWidget(<Widget data={data} type={'student'} />);
+      } else {
+      }
       break;
 
     case 'WIDGET_DELETED':

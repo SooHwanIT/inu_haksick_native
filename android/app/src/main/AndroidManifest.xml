@@ -28,7 +28,7 @@
         <receiver
                 android:name=".widget.Haksick"
                 android:exported="false"
-                android:label="My Hello Widget">
+                android:label="학식 메뉴판">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.inu_haksick_native.WIDGET_CLICK" />
