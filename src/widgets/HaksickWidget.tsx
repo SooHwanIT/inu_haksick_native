@@ -27,15 +27,15 @@ interface HaksickWidgetProps {
 }
 
 // Color constants
-const BACKGROUND_COLOR = '#F0F0F0';
-const HEADER_BACKGROUND_COLOR = '#404040';
-const HEADER_SELECTED_COLOR = '#5cb0ff';
-const HEADER_UNSELECTED_COLOR = '#808080';
-const TEXT_COLOR = '#2D2D2D';
-const TEXT_COLOR_LIGHT = '#4A4A4A';
-const TEXT_COLOR_WHITE = '#FFFFFF';
-const LIST_BACKGROUND_COLOR = '#FAFAFA';
-const LIST_BORDER_COLOR = '#afafaf';
+const BACKGROUND_COLOR = '#FFFFFF'; // Brighter background for overall widget
+const HEADER_BACKGROUND_COLOR = '#333333'; // Darker header background for contrast
+const HEADER_SELECTED_COLOR = '#0056b3'; // More subdued blue for selected
+const HEADER_UNSELECTED_COLOR = '#AAAAAA'; // Lighter gray for unselected
+const TEXT_COLOR = '#212121'; // Darker text for main content
+const TEXT_COLOR_LIGHT = '#5F5F5F'; // Lighter text color for secondary info
+const TEXT_COLOR_WHITE = '#FFFFFF'; // White for text on dark backgrounds
+const LIST_BACKGROUND_COLOR = '#F9F9F9'; // Light background for list items
+const LIST_BORDER_COLOR = '#E0E0E0'; // Light border color for list separation
 
 export function HaksickWidget({data, type}: HaksickWidgetProps) {
   const headerHeight = 42;
@@ -88,10 +88,9 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
           backgroundColor: HEADER_BACKGROUND_COLOR,
           height: headerHeight,
           width: 'match_parent',
-          justifyContent: 'space-around', // Use space-around for even spacing
+          justifyContent: 'space-around',
           alignItems: 'center',
           flexDirection: 'row',
-          //borderRadius: 4, // Rounded corners for a softer look
         }}>
         {/* Student Restaurant */}
         <FlexWidget
@@ -101,8 +100,7 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
             height: headerHeight,
             justifyContent: 'center',
             backgroundColor: type === 'student' ? HEADER_SELECTED_COLOR : HEADER_UNSELECTED_COLOR,
-            //borderRadius: 4,
-            paddingHorizontal: 12, // Add some horizontal padding
+            paddingHorizontal: 12,
           }}>
           <TextWidget
             style={{fontSize: headerFontSize, color: TEXT_COLOR_WHITE}}
@@ -117,7 +115,6 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
             height: headerHeight,
             justifyContent: 'center',
             backgroundColor: type === 'professor' ? HEADER_SELECTED_COLOR : HEADER_UNSELECTED_COLOR,
-            //borderRadius: 4,
             paddingHorizontal: 12,
           }}>
           <TextWidget
@@ -134,7 +131,6 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
             height: headerHeight,
             justifyContent: 'center',
             backgroundColor: type === 'dining27' ? HEADER_SELECTED_COLOR : HEADER_UNSELECTED_COLOR,
-            //borderRadius: 4,
             paddingHorizontal: 12,
           }}>
           <TextWidget
@@ -162,7 +158,7 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
       </FlexWidget>
 
       {/* Selected Restaurant's Menu List */}
-      {selectedRestaurant[0].meals.length === 0 ? (
+      {selectedRestaurant.length === 0 || selectedRestaurant[0].meals.length === 0 ? (
         <TextWidget
           style={{
             fontSize: headerFontSize,

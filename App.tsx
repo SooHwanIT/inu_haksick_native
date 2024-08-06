@@ -105,6 +105,9 @@ const App = () => {
   const [menuData, setMenuData] = useState<Menu | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Add a state to hold the current date
+  const [currentDate, setCurrentDate] = useState('');
+
   useEffect(() => {
     const fetchMenuData = async () => {
       try {
@@ -120,6 +123,11 @@ const App = () => {
 
     // AsyncStorage.clear(); // 전체 데이터 삭제, 필요에 따라 주석 처리
     fetchMenuData(); // 비동기 함수 호출
+
+    // Set the current date in 'YYYY-MM-DD' format
+    const today = new Date();
+    const date = today.toISOString().split('T')[0];
+    setCurrentDate(date);
   }, []);
 
   if (loading) {
@@ -136,6 +144,10 @@ const App = () => {
     <PaperProvider>
       <NavigationContainer>
         <SafeAreaProvider>
+          {/* Display the current date */}
+          <View style={styles.dateContainer}>
+            <Text style={styles.dateText}>{`${menuData?.lastUpdate}`}</Text>
+          </View>
           <Tab.Navigator>
             <Tab.Screen name="학생 식당">
               {() => (
@@ -220,6 +232,15 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     color: '#333',
     textAlign: 'center',
+  },
+  dateContainer: {
+    padding: 4,
+    backgroundColor: '#f1f1f1',
+    alignItems: 'center',
+  },
+  dateText: {
+    fontSize: 18,
+    color: '#333',
   },
 });
 
