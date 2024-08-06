@@ -13,7 +13,7 @@
                     android:previewImage="@drawable/haksick_preview"
                     android:description="@string/widget_haksick_description"
 
-                    android:resizeMode="vertical"
+                    android:resizeMode="vertical|horizon"
 
                     android:widgetCategory="home_screen">
 </appwidget-provider>

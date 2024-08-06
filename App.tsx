@@ -137,30 +137,31 @@ const App = () => {
       <NavigationContainer>
         <SafeAreaProvider>
           <Tab.Navigator>
-            <Tab.Screen name="Student Dining">
+            <Tab.Screen name="학생 식당">
               {() => (
                 <DiningScreen
                   data={menuData?.restaurants.studentRestaurant || []}
                 />
               )}
             </Tab.Screen>
-            <Tab.Screen name="Professor Dining">
+            <Tab.Screen name="교수 식당">
               {() => (
                 <DiningScreen
                   data={menuData?.restaurants.professorRestaurant || []}
                 />
               )}
             </Tab.Screen>
-            <Tab.Screen name="27호관 Dining">
+            <Tab.Screen name="27호관 식당">
               {() => (
                 <DiningScreen
                   data={menuData?.restaurants.dining27Restaurant || []}
                 />
               )}
             </Tab.Screen>
-            <Tab.Screen name="1기숙사 Dining">
+            <Tab.Screen name="1기숙사 식당">
               {() => <DiningScreen data={menuData?.restaurants.dorm1Restaurant || []} />}
             </Tab.Screen>
+
             {/*<Tab.Screen name="1기숙사 Dining">*/}
             {/*  {() => <HaksickWidgetPreviewScreen />}*/}
             {/*</Tab.Screen>*/}

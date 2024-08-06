@@ -26,12 +26,23 @@ interface HaksickWidgetProps {
   type: string;
 }
 
-export function HaksickWidget({data, type}: HaksickWidgetProps) {
-  const haederTapSize = 42;
-  const headerFontSize = 16;
-  const bodyFontSize = 13;
+// Color constants
+const BACKGROUND_COLOR = '#F0F0F0';
+const HEADER_BACKGROUND_COLOR = '#404040';
+const HEADER_SELECTED_COLOR = '#5cb0ff';
+const HEADER_UNSELECTED_COLOR = '#808080';
+const TEXT_COLOR = '#2D2D2D';
+const TEXT_COLOR_LIGHT = '#4A4A4A';
+const TEXT_COLOR_WHITE = '#FFFFFF';
+const LIST_BACKGROUND_COLOR = '#FAFAFA';
+const LIST_BORDER_COLOR = '#afafaf';
 
-  // type에 따른 레스토랑 데이터 선택
+export function HaksickWidget({data, type}: HaksickWidgetProps) {
+  const headerHeight = 42;
+  const headerFontSize = 14;
+  const bodyFontSize = 12;
+
+  // Select restaurant data based on type
   const selectedRestaurant = (() => {
     switch (type) {
       case 'student':
@@ -52,101 +63,114 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
       style={{
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        backgroundColor: '#F5F5F5',
+        backgroundColor: BACKGROUND_COLOR,
         height: 'match_parent',
         width: 'match_parent',
-        borderRadius: 4,
+        borderRadius: 8,
+        padding: 8,
         flexDirection: 'column',
       }}>
-      {/* 해더 */}
+      {/* Date */}
+      <TextWidget
+        style={{
+          fontSize: headerFontSize,
+          color: TEXT_COLOR,
+          textAlign: 'center',
+          paddingVertical: 6, // Less padding
+          width: 'match_parent',
+        }}
+        text={`${data.lastUpdate}`}
+      />
+
+      {/* Header */}
       <FlexWidget
         style={{
-          backgroundColor: '#3A3A3A',
-          height: haederTapSize,
+          backgroundColor: HEADER_BACKGROUND_COLOR,
+          height: headerHeight,
           width: 'match_parent',
-          justifyContent: 'center',
+          justifyContent: 'space-around', // Use space-around for even spacing
           alignItems: 'center',
           flexDirection: 'row',
+          //borderRadius: 4, // Rounded corners for a softer look
         }}>
-        {/* 학생 식당 */}
+        {/* Student Restaurant */}
         <FlexWidget
           clickAction="CHANGE_MENU"
           clickActionData={{id: 'student'}}
           style={{
-            flex: 1,
-            height: haederTapSize,
-            alignItems: 'center',
+            height: headerHeight,
             justifyContent: 'center',
-            backgroundColor: type === 'student' ? '#007AFF' : '#6E6E6E',
+            backgroundColor: type === 'student' ? HEADER_SELECTED_COLOR : HEADER_UNSELECTED_COLOR,
+            //borderRadius: 4,
+            paddingHorizontal: 12, // Add some horizontal padding
           }}>
           <TextWidget
-            style={{fontSize: headerFontSize, color: '#FFFFFF'}}
+            style={{fontSize: headerFontSize, color: TEXT_COLOR_WHITE}}
             text="학생 식당"
           />
         </FlexWidget>
-        {/* 교수 식당 */}
+        {/* Professor Restaurant */}
         <FlexWidget
           clickAction="CHANGE_MENU"
           clickActionData={{id: 'professor'}}
           style={{
-            flex: 1,
-            height: haederTapSize,
-            alignItems: 'center',
+            height: headerHeight,
             justifyContent: 'center',
-            backgroundColor: type === 'professor' ? '#007AFF' : '#6E6E6E',
+            backgroundColor: type === 'professor' ? HEADER_SELECTED_COLOR : HEADER_UNSELECTED_COLOR,
+            //borderRadius: 4,
+            paddingHorizontal: 12,
           }}>
           <TextWidget
-            style={{fontSize: headerFontSize, color: '#FFFFFF'}}
+            style={{fontSize: headerFontSize, color: TEXT_COLOR_WHITE}}
             text="교수 식당"
           />
         </FlexWidget>
 
-        {/* 27호관 식당 */}
+        {/* Dining27 Restaurant */}
         <FlexWidget
           clickAction="CHANGE_MENU"
           clickActionData={{id: 'dining27'}}
           style={{
-            flex: 1,
-            height: haederTapSize,
-            alignItems: 'center',
+            height: headerHeight,
             justifyContent: 'center',
-            backgroundColor: type === 'dining27' ? '#007AFF' : '#6E6E6E',
+            backgroundColor: type === 'dining27' ? HEADER_SELECTED_COLOR : HEADER_UNSELECTED_COLOR,
+            //borderRadius: 4,
+            paddingHorizontal: 12,
           }}>
           <TextWidget
-            style={{fontSize: headerFontSize, color: '#FFFFFF'}}
+            style={{fontSize: headerFontSize, color: TEXT_COLOR_WHITE}}
             text="27호관 식당"
           />
         </FlexWidget>
 
-        {/* 1기숙사 식당 */}
+        {/* Dorm1 Restaurant */}
         <FlexWidget
           clickAction="CHANGE_MENU"
           clickActionData={{id: 'dorm1'}}
           style={{
-            flex: 1,
-            height: haederTapSize,
-            alignItems: 'center',
+            height: headerHeight,
             justifyContent: 'center',
-            backgroundColor: type === 'dorm1' ? '#007AFF' : '#6E6E6E',
+            backgroundColor: type === 'dorm1' ? HEADER_SELECTED_COLOR : HEADER_UNSELECTED_COLOR,
+            borderRadius: 4,
+            paddingHorizontal: 12,
           }}>
           <TextWidget
-            style={{fontSize: headerFontSize, color: '#FFFFFF'}}
+            style={{fontSize: headerFontSize, color: TEXT_COLOR_WHITE}}
             text="1기숙사 식당"
           />
         </FlexWidget>
       </FlexWidget>
 
-      {/* 선택된 식당의 메뉴 리스트 */}
+      {/* Selected Restaurant's Menu List */}
       {selectedRestaurant[0].meals.length === 0 ? (
         <TextWidget
           style={{
             fontSize: headerFontSize,
-            color: '#555555',
-            textAlign: 'center', // 텍스트 중앙 정렬
-
+            color: TEXT_COLOR_LIGHT,
+            textAlign: 'center',
             height: 'match_parent',
             width: 'match_parent',
-            backgroundColor: '#ffffff',
+            backgroundColor: LIST_BACKGROUND_COLOR,
           }}
           text="메뉴가 준비되지 않았습니다."
         />
@@ -155,7 +179,7 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
           style={{
             height: 'match_parent',
             width: 'match_parent',
-            backgroundColor: '#ffffff',
+            backgroundColor: LIST_BACKGROUND_COLOR,
           }}>
           {selectedRestaurant[0]?.meals.map((item, i) => (
             <FlexWidget
@@ -163,16 +187,17 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
               clickAction={'OPEN_APP'}
               style={{
                 width: 'match_parent',
-                alignItems: 'center', // 중앙 정렬
+                alignItems: 'center',
                 borderBottomWidth: 1,
+                borderBottomColor: LIST_BORDER_COLOR,
               }}>
               <TextWidget
                 style={{
-                  fontSize: headerFontSize + 8, // mealTime 글씨 크기 키움
+                  fontSize: headerFontSize + 8, // Increase font size for mealTime
                   fontWeight: 'bold',
                   marginBottom: 8,
-                  color: '#333333',
-                  textAlign: 'center', // 텍스트 중앙 정렬
+                  color: TEXT_COLOR,
+                  textAlign: 'center',
                 }}
                 text={item.mealTime}
               />
@@ -181,8 +206,8 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
                   key={`dish-${i}-${j}`}
                   style={{
                     fontSize: bodyFontSize,
-                    color: '#555555',
-                    textAlign: 'center', // 텍스트 중앙 정렬
+                    color: TEXT_COLOR_LIGHT,
+                    textAlign: 'center',
                   }}
                   text={meal}
                 />
