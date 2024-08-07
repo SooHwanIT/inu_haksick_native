@@ -24,23 +24,42 @@ interface Menu {
 interface HaksickWidgetProps {
   data: Menu;
   type: string;
+  theme: 'light' | 'dark';
 }
 
-// Color constants
-const BACKGROUND_COLOR = '#FFFFFF'; // Brighter background for overall widget
-const HEADER_BACKGROUND_COLOR = '#333333'; // Darker header background for contrast
-const HEADER_SELECTED_COLOR = '#0056b3'; // More subdued blue for selected
-const HEADER_UNSELECTED_COLOR = '#AAAAAA'; // Lighter gray for unselected
-const TEXT_COLOR = '#212121'; // Darker text for main content
-const TEXT_COLOR_LIGHT = '#5F5F5F'; // Lighter text color for secondary info
-const TEXT_COLOR_WHITE = '#FFFFFF'; // White for text on dark backgrounds
-const LIST_BACKGROUND_COLOR = '#F9F9F9'; // Light background for list items
-const LIST_BORDER_COLOR = '#E0E0E0'; // Light border color for list separation
+// Light theme color constants
+const LIGHT_THEME = {
+  BACKGROUND_COLOR: '#f9f9f9', // Brighter background for the overall widget
+  HEADER_BACKGROUND_COLOR: '#ffffff', // Pure white header background for a clean look
+  HEADER_SELECTED_COLOR: '#d0e1ff', // Soft blue for selected
+  HEADER_UNSELECTED_COLOR: '#f0f0f0', // Light gray for unselected
+  TEXT_COLOR: '#333333', // Darker text for main content
+  TEXT_COLOR_LIGHT: '#757575', // Medium gray for secondary info
+  TEXT_COLOR_BLACK: '#000000', // Black text for headers
+  LIST_BACKGROUND_COLOR: '#ffffff', // White background for list items
+  LIST_BORDER_COLOR: '#e0e0e0', // Light border color for list separation
+};
 
-export function HaksickWidget({data, type}: HaksickWidgetProps) {
+// Dark theme color constants
+const DARK_THEME = {
+  BACKGROUND_COLOR: '#2e2e2e',
+  HEADER_BACKGROUND_COLOR: '#3a3a3a',
+  HEADER_SELECTED_COLOR: '#6c7ae0',
+  HEADER_UNSELECTED_COLOR: '#4a4a4a',
+  TEXT_COLOR: '#ffffff',
+  TEXT_COLOR_LIGHT: '#cccccc',
+  TEXT_COLOR_BLACK: '#ffffff',
+  LIST_BACKGROUND_COLOR: '#3a3a3a',
+  LIST_BORDER_COLOR: '#5a5a5a',
+};
+
+export function HaksickWidget({data, type, theme}: HaksickWidgetProps) {
   const headerHeight = 42;
   const headerFontSize = 14;
   const bodyFontSize = 12;
+
+  // Select the theme colors based on the theme prop
+  const colors = theme === 'dark' ? DARK_THEME : LIGHT_THEME;
 
   // Select restaurant data based on type
   const selectedRestaurant = (() => {
@@ -63,18 +82,18 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
       style={{
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        backgroundColor: BACKGROUND_COLOR,
+        backgroundColor: colors.BACKGROUND_COLOR,
         height: 'match_parent',
         width: 'match_parent',
         borderRadius: 8,
-        padding: 8,
+        padding: 4,
         flexDirection: 'column',
       }}>
       {/* Date */}
       <TextWidget
         style={{
           fontSize: headerFontSize,
-          color: TEXT_COLOR,
+          color: colors.TEXT_COLOR,
           textAlign: 'center',
           paddingVertical: 6, // Less padding
           width: 'match_parent',
@@ -85,11 +104,13 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
       {/* Header */}
       <FlexWidget
         style={{
-          backgroundColor: HEADER_BACKGROUND_COLOR,
+          backgroundColor: colors.HEADER_BACKGROUND_COLOR,
           height: headerHeight,
           width: 'match_parent',
           justifyContent: 'space-around',
           alignItems: 'center',
+          borderTopLeftRadius: 12,
+          borderTopRightRadius: 12,
           flexDirection: 'row',
         }}>
         {/* Student Restaurant */}
@@ -99,11 +120,12 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
           style={{
             height: headerHeight,
             justifyContent: 'center',
-            backgroundColor: type === 'student' ? HEADER_SELECTED_COLOR : HEADER_UNSELECTED_COLOR,
+            backgroundColor: type === 'student' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
             paddingHorizontal: 12,
+            borderTopLeftRadius: 12,
           }}>
           <TextWidget
-            style={{fontSize: headerFontSize, color: TEXT_COLOR_WHITE}}
+            style={{fontSize: headerFontSize, color: colors.TEXT_COLOR_BLACK}}
             text="학생 식당"
           />
         </FlexWidget>
@@ -114,11 +136,11 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
           style={{
             height: headerHeight,
             justifyContent: 'center',
-            backgroundColor: type === 'professor' ? HEADER_SELECTED_COLOR : HEADER_UNSELECTED_COLOR,
+            backgroundColor: type === 'professor' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
             paddingHorizontal: 12,
           }}>
           <TextWidget
-            style={{fontSize: headerFontSize, color: TEXT_COLOR_WHITE}}
+            style={{fontSize: headerFontSize, color: colors.TEXT_COLOR_BLACK}}
             text="교수 식당"
           />
         </FlexWidget>
@@ -130,11 +152,11 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
           style={{
             height: headerHeight,
             justifyContent: 'center',
-            backgroundColor: type === 'dining27' ? HEADER_SELECTED_COLOR : HEADER_UNSELECTED_COLOR,
+            backgroundColor: type === 'dining27' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
             paddingHorizontal: 12,
           }}>
           <TextWidget
-            style={{fontSize: headerFontSize, color: TEXT_COLOR_WHITE}}
+            style={{fontSize: headerFontSize, color: colors.TEXT_COLOR_BLACK}}
             text="27호관 식당"
           />
         </FlexWidget>
@@ -146,12 +168,12 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
           style={{
             height: headerHeight,
             justifyContent: 'center',
-            backgroundColor: type === 'dorm1' ? HEADER_SELECTED_COLOR : HEADER_UNSELECTED_COLOR,
-            borderRadius: 4,
+            backgroundColor: type === 'dorm1' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
             paddingHorizontal: 12,
+            borderTopRightRadius: 12,
           }}>
           <TextWidget
-            style={{fontSize: headerFontSize, color: TEXT_COLOR_WHITE}}
+            style={{fontSize: headerFontSize, color: colors.TEXT_COLOR_BLACK}}
             text="1기숙사 식당"
           />
         </FlexWidget>
@@ -162,11 +184,11 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
         <TextWidget
           style={{
             fontSize: headerFontSize,
-            color: TEXT_COLOR_LIGHT,
+            color: colors.TEXT_COLOR_LIGHT,
             textAlign: 'center',
             height: 'match_parent',
             width: 'match_parent',
-            backgroundColor: LIST_BACKGROUND_COLOR,
+            backgroundColor: colors.LIST_BACKGROUND_COLOR,
           }}
           text="메뉴가 준비되지 않았습니다."
         />
@@ -175,7 +197,9 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
           style={{
             height: 'match_parent',
             width: 'match_parent',
-            backgroundColor: LIST_BACKGROUND_COLOR,
+            borderBottomLeftRadius: 12,
+            borderBottomRightRadius: 12,
+            backgroundColor: colors.LIST_BACKGROUND_COLOR,
           }}>
           {selectedRestaurant[0]?.meals.map((item, i) => (
             <FlexWidget
@@ -185,14 +209,14 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
                 width: 'match_parent',
                 alignItems: 'center',
                 borderBottomWidth: 1,
-                borderBottomColor: LIST_BORDER_COLOR,
+                borderBottomColor: colors.LIST_BORDER_COLOR,
               }}>
               <TextWidget
                 style={{
                   fontSize: headerFontSize + 8, // Increase font size for mealTime
                   fontWeight: 'bold',
                   marginBottom: 8,
-                  color: TEXT_COLOR,
+                  color: colors.TEXT_COLOR,
                   textAlign: 'center',
                 }}
                 text={item.mealTime}
@@ -202,7 +226,7 @@ export function HaksickWidget({data, type}: HaksickWidgetProps) {
                   key={`dish-${i}-${j}`}
                   style={{
                     fontSize: bodyFontSize,
-                    color: TEXT_COLOR_LIGHT,
+                    color: colors.TEXT_COLOR_LIGHT,
                     textAlign: 'center',
                   }}
                   text={meal}
