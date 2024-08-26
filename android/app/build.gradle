@@ -79,8 +79,8 @@ android {
         applicationId "com.inu_haksick_native"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
     }
     signingConfigs {
         debug {
@@ -113,7 +113,8 @@ android {
 }
 
 dependencies {
-    // The version of react-native is set by the React Native Gradle Plugin
+
+    implementation 'com.google.android.gms:play-services-ads:22.2.0'
     implementation("com.facebook.react:react-android")
 
     if (hermesEnabled.toBoolean()) {

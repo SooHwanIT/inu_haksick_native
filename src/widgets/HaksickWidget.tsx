@@ -23,21 +23,21 @@ interface Menu {
 
 interface HaksickWidgetProps {
   data: Menu;
-  type: string;
+  type?: string; // type을 선택적으로 변경 (기본값을 설정할 수 있도록)
   theme: 'light' | 'dark';
 }
 
 // Light theme color constants
 const LIGHT_THEME = {
-  BACKGROUND_COLOR: '#f9f9f9', // Brighter background for the overall widget
-  HEADER_BACKGROUND_COLOR: '#ffffff', // Pure white header background for a clean look
-  HEADER_SELECTED_COLOR: '#d0e1ff', // Soft blue for selected
-  HEADER_UNSELECTED_COLOR: '#f0f0f0', // Light gray for unselected
-  TEXT_COLOR: '#333333', // Darker text for main content
-  TEXT_COLOR_LIGHT: '#757575', // Medium gray for secondary info
-  TEXT_COLOR_BLACK: '#000000', // Black text for headers
-  LIST_BACKGROUND_COLOR: '#ffffff', // White background for list items
-  LIST_BORDER_COLOR: '#e0e0e0', // Light border color for list separation
+  BACKGROUND_COLOR: '#f9f9f9',
+  HEADER_BACKGROUND_COLOR: '#ffffff',
+  HEADER_SELECTED_COLOR: '#d0e1ff',
+  HEADER_UNSELECTED_COLOR: '#f0f0f0',
+  TEXT_COLOR: '#333333',
+  TEXT_COLOR_LIGHT: '#757575',
+  TEXT_COLOR_BLACK: '#000000',
+  LIST_BACKGROUND_COLOR: '#ffffff',
+  LIST_BORDER_COLOR: '#e0e0e0',
 };
 
 // Dark theme color constants
@@ -53,7 +53,7 @@ const DARK_THEME = {
   LIST_BORDER_COLOR: '#5a5a5a',
 };
 
-export function HaksickWidget({data, type, theme}: HaksickWidgetProps) {
+export function HaksickWidget({data, type = 'student', theme}: HaksickWidgetProps) { // 기본값 설정
   const headerHeight = 42;
   const headerFontSize = 14;
   const bodyFontSize = 12;
@@ -77,6 +77,8 @@ export function HaksickWidget({data, type, theme}: HaksickWidgetProps) {
     }
   })();
 
+  const hasData = selectedRestaurant.length > 0 && selectedRestaurant[0].meals.length > 0;
+
   return (
     <FlexWidget
       style={{
@@ -95,7 +97,7 @@ export function HaksickWidget({data, type, theme}: HaksickWidgetProps) {
           fontSize: headerFontSize,
           color: colors.TEXT_COLOR,
           textAlign: 'center',
-          paddingVertical: 6, // Less padding
+          paddingVertical: 6,
           width: 'match_parent',
         }}
         text={`${data.lastUpdate}`}
@@ -180,19 +182,7 @@ export function HaksickWidget({data, type, theme}: HaksickWidgetProps) {
       </FlexWidget>
 
       {/* Selected Restaurant's Menu List */}
-      {selectedRestaurant.length === 0 || selectedRestaurant[0].meals.length === 0 ? (
-        <TextWidget
-          style={{
-            fontSize: headerFontSize,
-            color: colors.TEXT_COLOR_LIGHT,
-            textAlign: 'center',
-            height: 'match_parent',
-            width: 'match_parent',
-            backgroundColor: colors.LIST_BACKGROUND_COLOR,
-          }}
-          text="메뉴가 준비되지 않았습니다."
-        />
-      ) : (
+      {hasData ? (
         <ListWidget
           style={{
             height: 'match_parent',
@@ -201,7 +191,7 @@ export function HaksickWidget({data, type, theme}: HaksickWidgetProps) {
             borderBottomRightRadius: 12,
             backgroundColor: colors.LIST_BACKGROUND_COLOR,
           }}>
-          {selectedRestaurant[0]?.meals.map((item, i) => (
+          {selectedRestaurant[0].meals.map((item, i) => (
             <FlexWidget
               key={`meal-${i}`}
               clickAction={'OPEN_APP'}
@@ -213,7 +203,7 @@ export function HaksickWidget({data, type, theme}: HaksickWidgetProps) {
               }}>
               <TextWidget
                 style={{
-                  fontSize: headerFontSize + 8, // Increase font size for mealTime
+                  fontSize: headerFontSize + 8,
                   fontWeight: 'bold',
                   marginBottom: 8,
                   color: colors.TEXT_COLOR,
@@ -235,6 +225,27 @@ export function HaksickWidget({data, type, theme}: HaksickWidgetProps) {
             </FlexWidget>
           ))}
         </ListWidget>
+      ) : (
+        <FlexWidget
+          clickAction="REFRESH_WIDGET" // 새로고침 동작
+          style={{
+            height: 'match_parent',
+            width: 'match_parent',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: colors.LIST_BACKGROUND_COLOR,
+            borderBottomLeftRadius: 12,
+            borderBottomRightRadius: 12,
+          }}>
+          <TextWidget
+            style={{
+              fontSize: headerFontSize,
+              color: colors.TEXT_COLOR_LIGHT,
+              textAlign: 'center',
+            }}
+            text="메뉴가 준비되지 않았습니다. 새로고침하려면 클릭하세요."
+          />
+        </FlexWidget>
       )}
     </FlexWidget>
   );

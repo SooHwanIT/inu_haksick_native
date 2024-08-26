@@ -1,4 +1,7 @@
 {
   "name": "inu_haksick_native",
-  "displayName": "inu_haksick_native"
+  "displayName": "inu_haksick_native",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-9011101777574758~6145949090"
+  }
 }
