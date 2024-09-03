@@ -111,8 +111,8 @@ export function HaksickWidget({data, type = 'student', theme}: HaksickWidgetProp
           width: 'match_parent',
           justifyContent: 'space-around',
           alignItems: 'center',
-          borderTopLeftRadius: 12,
-          borderTopRightRadius: 12,
+          // borderTopLeftRadius: 12,
+          // borderTopRightRadius: 12,
           flexDirection: 'row',
         }}>
         {/* Student Restaurant */}
@@ -156,6 +156,7 @@ export function HaksickWidget({data, type = 'student', theme}: HaksickWidgetProp
             justifyContent: 'center',
             backgroundColor: type === 'dining27' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
             paddingHorizontal: 12,
+
           }}>
           <TextWidget
             style={{fontSize: headerFontSize, color: colors.TEXT_COLOR_BLACK}}
