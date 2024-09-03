@@ -4,8 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const STUDENT_DINING_URL = 'https://inucoop.com/main.php?mkey=2&w=2&l=1';
 const PROFESSOR_DINING_URL = 'https://inucoop.com/main.php?mkey=2&w=2&l=2';
-const DINING27_URL = 'https://inucoop.com/main.php?mkey=2&w=2&l=3'; // 예시 URL
-const DORM1_URL = 'https://inucoop.com/main.php?mkey=2&w=2&l=4'; // 예시 URL
+const DINING27_URL = 'https://inucoop.com/main.php?mkey=2&w=2&l=4'; // 예시 URL
+const DORM1_URL = 'https://inucoop.com/main.php?mkey=2&w=2&l=3'; // 예시 URL
 
 interface Meal {
   mealTime: string;
@@ -35,7 +35,7 @@ const fetchMenu = async (url: string): Promise<Meal[]> => {
     const $ = load(htmlString);
 
     const newMenu: Meal[] = [];
-    const todayIndex = new Date().getDay() % 7;
+    const todayIndex = new Date().getDay()-1 % 7;
 
     $('#menuBox tbody tr').each((i, row) => {
       if (i === 0) return;
@@ -68,7 +68,7 @@ const getMenuData = async (): Promise<Menu> => {
     let storedMenu: Menu | null = storedMenuStr ? JSON.parse(storedMenuStr) : null;
 
     const today = new Date().toISOString().split('T')[0];
-
+    console.log(today)
     // 메뉴 데이터가 없거나 오늘 날짜로 업데이트되지 않은 경우 새로 가져오기
     if (!storedMenu || storedMenu.lastUpdate !== today) {
       const studentRestaurant = await fetchMenu(STUDENT_DINING_URL);
