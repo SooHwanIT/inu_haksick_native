@@ -35,8 +35,8 @@ const fetchMenu = async (url: string): Promise<Meal[]> => {
     const $ = load(htmlString);
 
     const newMenu: Meal[] = [];
-    const todayIndex = new Date().getDay()-1 % 7;
-
+    const todayIndex = new Date().getDay() % 7;
+    console.log("todayIndex", todayIndex, "new Date().getDay()",new Date().getDay())
     $('#menuBox tbody tr').each((i, row) => {
       if (i === 0) return;
 
