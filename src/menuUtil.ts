@@ -35,7 +35,14 @@ const fetchMenu = async (url: string): Promise<Meal[]> => {
     const $ = load(htmlString);
 
     const newMenu: Meal[] = [];
-    const todayIndex = new Date().getDay() % 7;
+
+
+    const now = new Date();
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
+    const koreaTimeDiff = 9 * 60 * 60 * 1000;
+    const korNow = new Date(utc+koreaTimeDiff);
+
+    const todayIndex = korNow.getDay() % 7;
     console.log("todayIndex", todayIndex, "new Date().getDay()",new Date().getDay())
     $('#menuBox tbody tr').each((i, row) => {
       if (i === 0) return;
@@ -67,8 +74,16 @@ const getMenuData = async (): Promise<Menu> => {
     const storedMenuStr = await AsyncStorage.getItem('menu');
     let storedMenu: Menu | null = storedMenuStr ? JSON.parse(storedMenuStr) : null;
 
-    const today = new Date().toISOString().split('T')[0];
-    console.log(today)
+
+    const now = new Date();
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
+    const koreaTimeDiff = 9 * 60 * 60 * 1000;
+    const korNow = new Date(utc+koreaTimeDiff);
+
+    const today = korNow.toISOString().split('T')[0];
+    console.log('today',today)
+
+
     // 메뉴 데이터가 없거나 오늘 날짜로 업데이트되지 않은 경우 새로 가져오기
     if (!storedMenu || storedMenu.lastUpdate !== today) {
       const studentRestaurant = await fetchMenu(STUDENT_DINING_URL);
