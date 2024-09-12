@@ -41,15 +41,17 @@ const fetchMenu = async (url: string): Promise<Meal[]> => {
     const utc = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
     const koreaTimeDiff = 9 * 60 * 60 * 1000;
     const korNow = new Date(utc+koreaTimeDiff);
-
-    const todayIndex = korNow.getDay() % 7;
-    console.log("todayIndex", todayIndex, "new Date().getDay()",new Date().getDay())
+console.log("korNow, ",korNow)
+    const todayIndex = korNow.getDay()-1 % 7;
+    // console.log('todayIndex',todayIndex)
+    // console.log("todayIndex", todayIndex, "new Date().getDay()",new Date().getDay())
     $('#menuBox tbody tr').each((i, row) => {
       if (i === 0) return;
 
       const mealTime = $(row).find('td.corn_nm').text().trim();
 
       $(row).find('td.din_lists, td.din_list').each((j, cell) => {
+        // console.log('j : ',j,', cell : ',cell)
         if (j === todayIndex) {
           const dishes = $(cell).html()?.split('<br>')
             .map(d => d.trim())
@@ -90,7 +92,7 @@ const getMenuData = async (): Promise<Menu> => {
       const professorRestaurant = await fetchMenu(PROFESSOR_DINING_URL);
       const dining27Restaurant = await fetchMenu(DINING27_URL);
       const dorm1Restaurant = await fetchMenu(DORM1_URL);
-
+      console.log(today);
       // 새로운 메뉴 데이터 생성
       storedMenu = {
         lastUpdate: today,

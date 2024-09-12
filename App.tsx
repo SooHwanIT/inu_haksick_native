@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react';
-import HaksickScreen from "./src/screen/haksick.tsx";
+import React from 'react';
+import MealScreen from './src/screens/MealScreen'; // Update path as needed
+
 
 const App = () => {
-  return <HaksickScreen />;
+    return (
+  <MealScreen/>
+    );
 };
 
 export default App;

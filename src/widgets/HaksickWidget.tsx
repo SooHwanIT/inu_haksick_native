@@ -1,31 +1,7 @@
 import React from 'react';
 import { FlexWidget, ListWidget, TextWidget } from 'react-native-android-widget';
 
-interface Meal {
-    mealTime: string;
-    dishes: string[];
-}
 
-interface Restaurant {
-    name: string;
-    meals: Meal[];
-}
-
-interface Menu {
-    lastUpdate: string;
-    restaurants: {
-        studentRestaurant: Restaurant[];
-        professorRestaurant: Restaurant[];
-        dining27Restaurant: Restaurant[];
-        dorm1Restaurant: Restaurant[];
-    };
-}
-
-interface HaksickWidgetProps {
-    data: Menu;
-    type?: string;
-    theme: 'light' | 'dark';
-}
 
 // Light theme color constants
 const LIGHT_THEME = {
@@ -53,31 +29,37 @@ const DARK_THEME = {
     LIST_BORDER_COLOR: '#5a5a5a',
 };
 
-export function HaksickWidget({ data, type = 'student', theme }: HaksickWidgetProps) {
+export function HaksickWidget({ data, type = 'student', theme }) {
     const headerHeight = 42;
-    const headerFontSize = 12;
-    const bodyFontSize = 12;
+    const headerFontSize = 14;
+    const bodyFontSize = 16;
 
     // Select the theme colors based on the theme prop
     const colors = theme === 'dark' ? DARK_THEME : LIGHT_THEME;
 
-    // Select restaurant data based on type
-    const selectedRestaurant = (() => {
-        switch (type) {
-            case 'student':
-                return data.restaurants.studentRestaurant;
-            case 'professor':
-                return data.restaurants.professorRestaurant;
-            case 'dining27':
-                return data.restaurants.dining27Restaurant;
-            case 'dorm1':
-                return data.restaurants.dorm1Restaurant;
-            default:
-                return [];
-        }
-    })();
+    // 1. 서울 시간 기준으로 현재 날짜 가져오기 (yyyy-mm-dd 형식)
+    const getTodayDate = () => {
+        const seoulTime = new Date();
+        const formatter = new Intl.DateTimeFormat('ko-KR', {
+            timeZone: 'Asia/Seoul',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+        });
 
-    const hasData = selectedRestaurant.length > 0 && selectedRestaurant[0].meals.length > 0;
+        const [{ value: year }, , { value: month }, , { value: day }] = formatter.formatToParts(seoulTime);
+        return `${year}-${month}-${day}`;
+    };
+
+
+// 3. 오늘 날짜와 비교하여 필터링
+    const today = getTodayDate(); // 오늘 날짜 yyyy-mm-dd 형식으로 가져옴
+    const filteredData = data.filter(item => {
+        return item.cafeteria === type;
+    });
+
+    const hasData = true;
+    // const hasData = sselectedRestaurant.length > 0 && selectedRestaurant[0].meals.length > 0;
 
     return (
         <FlexWidget
@@ -101,7 +83,7 @@ export function HaksickWidget({ data, type = 'student', theme }: HaksickWidgetPr
                     paddingVertical: 6,
                     width: 'match_parent',
                 }}
-                text={`${data.lastUpdate}`}
+                text={`${today}`}
             />
 
             {/* Header */}
@@ -119,46 +101,47 @@ export function HaksickWidget({ data, type = 'student', theme }: HaksickWidgetPr
                 {/* Student Restaurant */}
                 <FlexWidget
                     clickAction="CHANGE_MENU"
-                    clickActionData={{ id: 'student' }}
+                    clickActionData={{ id: '학생식당' }}
                     style={{
                         height: headerHeight,
                         justifyContent: 'center',
-                        backgroundColor: type === 'student' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
+                        backgroundColor: type === '학생식당' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
                         paddingHorizontal: 12,
                         borderTopLeftRadius: 12,
+                        border:1,
                         flex: 1,
                     }}
                 >
                     <TextWidget
                         style={{ fontSize: headerFontSize, color: colors.TEXT_COLOR_BLACK }}
-                        text="학생 식당"
+                        text='학생식당'
                     />
                 </FlexWidget>
                 {/* Professor Restaurant */}
                 <FlexWidget
                     clickAction="CHANGE_MENU"
-                    clickActionData={{ id: 'professor' }}
+                    clickActionData={{ id: '2호관 교직원 식당' }}
                     style={{
                         height: headerHeight,
                         justifyContent: 'center',
-                        backgroundColor: type === 'professor' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
+                        backgroundColor: type === '2호관 교직원 식당' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
                         paddingHorizontal: 12,
                         flex: 1,
                     }}
                 >
                     <TextWidget
                         style={{ fontSize: headerFontSize, color: colors.TEXT_COLOR_BLACK }}
-                        text="교수 식당"
+                        text='2호관 교직원 식당'
                     />
                 </FlexWidget>
                 {/* Dining27 Restaurant */}
                 <FlexWidget
                     clickAction="CHANGE_MENU"
-                    clickActionData={{ id: 'dining27' }}
+                    clickActionData={{ id: '27호관 식당' }}
                     style={{
                         height: headerHeight,
                         justifyContent: 'center',
-                        backgroundColor: type === 'dining27' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
+                        backgroundColor: type === '27호관 식당' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
                         paddingHorizontal: 12,
                         flex: 1,
                     }}
@@ -168,14 +151,32 @@ export function HaksickWidget({ data, type = 'student', theme }: HaksickWidgetPr
                         text="27호관 식당"
                     />
                 </FlexWidget>
-                {/* Dorm1 Restaurant */}
+                {/*사범대 식당*/}
                 <FlexWidget
                     clickAction="CHANGE_MENU"
-                    clickActionData={{ id: 'dorm1' }}
+                    clickActionData={{ id: '사범대 식당' }}
                     style={{
                         height: headerHeight,
                         justifyContent: 'center',
-                        backgroundColor: type === 'dorm1' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
+                        backgroundColor: type === '사범대 식당' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
+                        paddingHorizontal: 12,
+                        // borderTopRightRadius: 12,
+                        flex: 1,
+                    }}
+                >
+                    <TextWidget
+                        style={{ fontSize: headerFontSize, color: colors.TEXT_COLOR_BLACK }}
+                        text="사범대 식당"
+                    />
+                </FlexWidget>
+                {/* Dorm1 Restaurant */}
+                <FlexWidget
+                    clickAction="CHANGE_MENU"
+                    clickActionData={{ id: '제 1기숙사 식당' }}
+                    style={{
+                        height: headerHeight,
+                        justifyContent: 'center',
+                        backgroundColor: type === '제 1기숙사 식당' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
                         paddingHorizontal: 12,
                         borderTopRightRadius: 12,
                         flex: 1,
@@ -183,9 +184,10 @@ export function HaksickWidget({ data, type = 'student', theme }: HaksickWidgetPr
                 >
                     <TextWidget
                         style={{ fontSize: headerFontSize, color: colors.TEXT_COLOR_BLACK }}
-                        text="1기숙사 식당"
+                        text="제 1기숙사 식당"
                     />
                 </FlexWidget>
+
             </FlexWidget>
 
             {/* Selected Restaurant's Menu List */}
@@ -199,7 +201,7 @@ export function HaksickWidget({ data, type = 'student', theme }: HaksickWidgetPr
                         backgroundColor: colors.LIST_BACKGROUND_COLOR,
                     }}
                 >
-                    {selectedRestaurant[0].meals.map((item, i) => (
+                    {filteredData.map((item, i) => (
                         <FlexWidget
                             key={`meal-${i}`}
                             clickAction={'OPEN_APP'}
@@ -208,8 +210,10 @@ export function HaksickWidget({ data, type = 'student', theme }: HaksickWidgetPr
                                 alignItems: 'center',
                                 borderBottomWidth: 1,
                                 borderBottomColor: colors.LIST_BORDER_COLOR,
+                                padding: 8,
                             }}
                         >
+                            {/* 날짜 및 식사 유형 표시 */}
                             <TextWidget
                                 style={{
                                     fontSize: headerFontSize + 8,
@@ -218,9 +222,11 @@ export function HaksickWidget({ data, type = 'student', theme }: HaksickWidgetPr
                                     color: colors.TEXT_COLOR,
                                     textAlign: 'center',
                                 }}
-                                text={item.mealTime}
+                                text={`${item.type}`}
                             />
-                            {item.dishes.map((meal, j) => (
+
+                            {/* 메뉴 표시 */}
+                            {item.menu.split('\n').map((menuItem, j) => (
                                 <TextWidget
                                     key={`dish-${i}-${j}`}
                                     style={{
@@ -228,11 +234,12 @@ export function HaksickWidget({ data, type = 'student', theme }: HaksickWidgetPr
                                         color: colors.TEXT_COLOR_LIGHT,
                                         textAlign: 'center',
                                     }}
-                                    text={meal}
+                                    text={menuItem}
                                 />
                             ))}
                         </FlexWidget>
                     ))}
+
                 </ListWidget>
             ) : (
                 <FlexWidget
