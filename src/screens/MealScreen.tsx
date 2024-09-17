@@ -3,73 +3,55 @@ import { View, Text, FlatList, TouchableOpacity, ScrollView, ActivityIndicator, 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchAllMealData } from '../services/fetchAllMealData'; // 식단 데이터를 가져오는 함수 임포트
 
-// 고정된 식당 정보
 const cafeterias = [
-    { name: '학생식당', url: 'https://www.inu.ac.kr/inu/643/subview.do?enc=Zm5jdDF8QEB8JTJGZGluaW5nUm9vbSUyRmludSUyRnZpZXcuZG8lM0ZkYXlUeXBlJTNEd2VlayUyNnJvb21UeXBlJTNEMSUyNg%3D%3D' },
-    { name: '제 1기숙사 식당', url: 'https://www.inu.ac.kr/inu/643/subview.do?enc=Zm5jdDF8QEB8JTJGZGluaW5nUm9vbSUyRmludSUyRnZpZXcuZG8lM0ZkYXlUeXBlJTNEd2VlayUyNnJvb21UeXBlJTNEMiUyNg%3D%3D' },
-    { name: '2호관 교직원 식당', url: 'https://www.inu.ac.kr/inu/643/subview.do?enc=Zm5jdDF8QEB8JTJGZGluaW5nUm9vbSUyRmludSUyRnZpZXcuZG8lM0ZkYXlUeXBlJTNEd2VlayUyNnJvb21UeXBlJTNEMyUyNg%3D%3D' },
-    { name: '27호관 식당', url: 'https://www.inu.ac.kr/inu/643/subview.do?enc=Zm5jdDF8QEB8JTJGZGluaW5nUm9vbSUyRmludSUyRnZpZXcuZG8lM0ZkYXlUeXBlJTNEd2VlayUyNnJvb21UeXBlJTNENCUyNg%3D%3D' },
-    { name: '사범대 식당', url: 'https://www.inu.ac.kr/inu/643/subview.do?enc=Zm5jdDF8QEB8JTJGZGluaW5nUm9vbSUyRmludSUyRnZpZXcuZG8lM0ZkYXlUeXBlJTNEd2VlayUyNnJvb21UeXBlJTNENSUyNg%3D%3D' },
+    { name: '학생식당' },
+    { name: '제 1기숙사 식당' },
+    { name: '2호관 교직원 식당' },
+    { name: '27호관 식당' },
+    { name: '사범대 식당' },
 ];
 
 const MealScreen = () => {
     const [selectedDate, setSelectedDate] = useState('');
-    const [selectedCafeteria, setSelectedCafeteria] = useState(cafeterias[0].name); // 첫 번째 식당을 기본 선택
+    const [selectedCafeteria, setSelectedCafeteria] = useState(cafeterias[0].name);
     const [dates, setDates] = useState<string[]>([]);
     const [mealData, setMealData] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true); // 로딩 상태 추가
+    const [loading, setLoading] = useState(true);
 
-    // 오늘 날짜 가져오기 (YYYY-MM-DD(요일) 형식)
     const getTodayDateWithDay = () => {
         const today = new Date();
         const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+        const month = String(today.getMonth() + 1).padStart(2, '0');
         const day = String(today.getDate()).padStart(2, '0');
         const dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"][today.getDay()];
         return `${year}-${month}-${day}(${dayOfWeek})`;
     };
 
-    // 날짜에서 요일 제거하기
     const removeDayOfWeek = (dateString: string) => {
-        // YYYY-MM-DD(요일) 형식에서 (요일)을 제거
         return dateString.replace(/\(\w+\)$/, '');
     };
 
     useEffect(() => {
         const fetchData = async () => {
-            // 데이터를 불러오는 동안 로딩 상태를 true로 설정
             setLoading(true);
-
-            // 오늘 날짜
             const today = getTodayDateWithDay();
-
-            // 로컬 스토리지에서 식단 데이터를 불러옴
             const storedData = await AsyncStorage.getItem('allMealData');
-            // console.log(storedData);
             const allMeals = storedData ? JSON.parse(storedData) : [];
             const uniqueDates = Array.from(new Set(allMeals.filter((meal: any) => meal.cafeteria === cafeterias[0].name).map((meal: any) => meal.date)));
-
-            // console.log("Unique Dates:", uniqueDates); // 디버깅: 고유 날짜 확인
-
             setDates(uniqueDates);
 
-            // 오늘 날짜가 있으면 선택, 없으면 fetchAllMealData 호출
             if (uniqueDates.includes(today)) {
                 setSelectedDate(today);
                 setMealData(allMeals.filter((meal: any) => meal.date === today && meal.cafeteria === cafeterias[0].name));
                 setLoading(false);
             } else {
-                // 오늘 날짜가 없으면 fetchAllMealData 호출
                 await fetchAllMealData();
-
-                // 데이터를 다시 불러옴
                 const updatedStoredData = await AsyncStorage.getItem('allMealData');
                 const updatedAllMeals = updatedStoredData ? JSON.parse(updatedStoredData) : [];
                 const updatedUniqueDates = Array.from(new Set(updatedAllMeals.filter((meal: any) => meal.cafeteria === cafeterias[0].name).map((meal: any) => meal.date)));
 
                 setDates(updatedUniqueDates);
 
-                // 오늘 날짜가 데이터에 포함되어 있으면 선택
                 if (updatedUniqueDates.includes(today)) {
                     setSelectedDate(today);
                     setMealData(updatedAllMeals.filter((meal: any) => meal.date === today && meal.cafeteria === cafeterias[0].name));
@@ -77,8 +59,6 @@ const MealScreen = () => {
                     setSelectedDate(updatedUniqueDates[0]);
                     setMealData(updatedAllMeals.filter((meal: any) => meal.date === updatedUniqueDates[0] && meal.cafeteria === cafeterias[0].name));
                 }
-
-                // 데이터를 모두 불러왔으니 로딩 상태를 false로 변경
                 setLoading(false);
             }
         };
@@ -100,7 +80,6 @@ const MealScreen = () => {
         filterMeals();
     }, [selectedDate, selectedCafeteria]);
 
-    // 로딩 중일 때 표시할 화면
     if (loading) {
         return (
             <View style={styles.loadingContainer}>
@@ -113,32 +92,32 @@ const MealScreen = () => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                {/* 날짜 선택기 */}
-                <FlatList
-                    horizontal
-                    data={dates}
-                    keyExtractor={(item) => item}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => setSelectedDate(item)}>
-                            <Text style={[styles.button, selectedDate === item && styles.selectedButton]}>{item}</Text>
-                        </TouchableOpacity>
-                    )}
-                />
-
-                {/* 식당 선택기 */}
-                <FlatList
-                    horizontal
-                    data={cafeterias}
-                    keyExtractor={(item) => item.name}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => setSelectedCafeteria(item.name)}>
-                            <Text style={[styles.button, selectedCafeteria === item.name && styles.selectedButton]}>{item.name}</Text>
-                        </TouchableOpacity>
-                    )}
-                />
+                <View style={styles.flatListWrapper}>
+                    <FlatList
+                        horizontal
+                        data={dates}
+                        keyExtractor={(item) => item}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity onPress={() => setSelectedDate(item)}>
+                                <Text style={[styles.button, selectedDate === item && styles.selectedButton]}>{item}</Text>
+                            </TouchableOpacity>
+                        )}
+                    />
+                </View>
+                <View style={styles.flatListWrapper}>
+                    <FlatList
+                        horizontal
+                        data={cafeterias}
+                        keyExtractor={(item) => item.name}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity onPress={() => setSelectedCafeteria(item.name)}>
+                                <Text style={[styles.button, selectedCafeteria === item.name && styles.selectedButton]}>{item.name}</Text>
+                            </TouchableOpacity>
+                        )}
+                    />
+                </View>
             </View>
 
-            {/* 식단 데이터 표시 */}
             <ScrollView style={styles.mealList}>
                 {mealData.length > 0 ? (
                     mealData.map((meal, index) => (
@@ -157,18 +136,96 @@ const MealScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 16 },
-    header: { paddingBottom: 16 },
-    button: { padding: 10, margin: 5, borderWidth: 1, borderRadius: 5, fontSize: 14 },
-    selectedButton: { backgroundColor: '#6fa3ef', color: 'white' },
-    mealList: { flex: 1 },
-    mealItem: { marginBottom: 15, borderBottomWidth: 1, borderBottomColor: '#ddd', paddingBottom: 10 },
-    mealDate: { fontSize: 12, color: '#666' },
-    mealType: { fontSize: 16, fontWeight: 'bold' },
-    mealMenu: { fontSize: 14 },
-    loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-    loadingText: { marginTop: 10, fontSize: 16 },
-    noDataText: { textAlign: 'center', marginTop: 20, fontSize: 16, color: '#888' },
+    container: {
+        flex: 1,
+        // paddingHorizontal: 16, // 좌우 패딩을 조정해 화면에서 너무 붙지 않게
+        paddingVertical: 8,    // 상하 패딩을 추가해 자연스럽게
+        backgroundColor: '#f0f4f8',
+    },
+    header: {
+        marginBottom: 10,       // 아래에 더 넉넉한 간격 추가
+        // paddingVertical: 8,     // 위아래 패딩 조정
+        // paddingHorizontal: 5,   // 좌우 패딩 조금 줄임
+        // borderRadius: 12,
+        // backgroundColor: '#ffffff',
+        // shadowColor: '#000',
+        // shadowOffset: { width: 0, height: 2 },
+        // shadowOpacity: 0.1,
+        // shadowRadius: 3,
+        // elevation: 5,
+    },
+    flatListWrapper: {
+        marginBottom: 5,       // 리스트 간의 간격을 조금 더 넓힘
+    },
+    button: {
+        paddingVertical: 10,    // 버튼 안의 패딩을 유지
+        paddingHorizontal: 12,  // 좌우 패딩을 조금 줄여 더 컴팩트하게
+        marginHorizontal: 8,    // 버튼 사이의 간격을 적당히 유지
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 20,
+        fontSize: 14,
+        backgroundColor: '#f9fafb',
+        color: '#333',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+    },
+    selectedButton: {
+        backgroundColor: '#1e90ff',
+        color: 'white',
+        borderWidth: 0,
+    },
+    mealList: {
+        flex: 1,
+
+        paddingHorizontal: 16, // 좌우 패딩을 조정해 화면에서 너무 붙지 않게
+        // marginTop: 10,          // 위아래 여백을 조금 추가
+    },
+    mealItem: {
+        marginBottom: 15,       // 각 식단 아이템 간의 간격
+        padding: 12,            // 내부 패딩을 조금 줄여 너무 커 보이지 않게
+        borderRadius: 8,        // 모서리 둥글기 살짝 줄임
+        backgroundColor: '#ffffff',
+        borderWidth: 1,
+        borderColor: '#e0e0e0',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 3,
+    },
+    mealDate: {
+        fontSize: 12,
+        color: '#999',
+    },
+    mealType: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        color: '#333',
+    },
+    mealMenu: {
+        fontSize: 14,
+        color: '#555',
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    loadingText: {
+        marginTop: 10,
+        fontSize: 16,
+        color: '#555',
+    },
+    noDataText: {
+        textAlign: 'center',
+        marginTop: 20,
+        fontSize: 16,
+        color: '#888',
+    },
 });
 
 export default MealScreen;

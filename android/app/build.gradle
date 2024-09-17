@@ -79,8 +79,8 @@ android {
         applicationId "com.inu_haksick_native"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 7
-        versionName "1.6"
+        versionCode 8
+        versionName "2"
     }
     signingConfigs {
         debug {
