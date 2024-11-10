@@ -76,7 +76,6 @@ const getMenuData = async (): Promise<Menu> => {
     const storedMenuStr = await AsyncStorage.getItem('menu');
     let storedMenu: Menu | null = storedMenuStr ? JSON.parse(storedMenuStr) : null;
 
-
     const now = new Date();
     const utc = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
     const koreaTimeDiff = 9 * 60 * 60 * 1000;

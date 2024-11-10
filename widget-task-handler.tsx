@@ -2,7 +2,7 @@ import React from 'react';
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
 import { HaksickWidget } from './src/widgets/HaksickWidget.tsx';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { fetchAllMealData } from './src/menuUtil.ts';  // 이미 구현된 데이터 fetch 함수
+import {fetchAllMealData} from './src/services/fetchAllMealData.ts'
 
 const nameToWidget = {
   Haksick: HaksickWidget,
@@ -89,32 +89,23 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
     // 공통적으로 테마를 가져옴
     const theme = await getThemeFromStorage();
 
-    // 공통적으로 로컬 스토리지에서 todayMealData를 가져옴
     const todayMealData = await getTodayAllMealDataFromStorage();
-
-    if (!todayMealData.length) {
-      console.error('No meal data available');
-      return;
-    }
 
     switch (props.widgetAction) {
       case 'WIDGET_ADDED':
         if (widgetInfo.widgetName === 'Haksick') {
-          // console.log('Widget added with data:', todayMealData);
           props.renderWidget(<Widget data={todayMealData} theme={theme} />);
         }
         break;
 
       case 'WIDGET_UPDATE':
         if (widgetInfo.widgetName === 'Haksick') {
-          // console.log('Widget updated with data:', todayMealData);
           props.renderWidget(<Widget data={todayMealData} theme={theme} />);
         }
         break;
 
       case 'WIDGET_RESIZED':
         if (widgetInfo.widgetName === 'Haksick') {
-          // console.log('Widget resized with data:', todayMealData);
           props.renderWidget(<Widget data={todayMealData} theme={theme} />);
         }
         break;
@@ -126,10 +117,8 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
       case 'WIDGET_CLICK':
         if (props.clickAction === 'CHANGE_MENU') {
           const clickedType = props.clickActionData?.id || '학생식당';
-          // console.log(`Widget clicked to change menu to: ${clickedType}`);
           props.renderWidget(<Widget data={todayMealData} type={clickedType} theme={theme} />);
         } else if (props.clickAction === 'REFRESH_WIDGET') {
-          // console.log('Widget refreshed with data:', todayMealData);
           props.renderWidget(<Widget data={todayMealData} theme={theme} />);
         }
         break;

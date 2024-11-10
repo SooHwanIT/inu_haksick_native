@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import fetchAllMealData from '../services/fetchAllMealData.ts'
 // const fetchAllMealData = async () => {
 //     // 여기에 데이터를 다시 가져오는 로직을 구현하세요
-//     console.log("데이터를 다시 가져오는 중...");
+//     onsole.log("데이터를 다시 가져오는 중...");
 // };
 
 const clearStorageAndFetchData = async () => {

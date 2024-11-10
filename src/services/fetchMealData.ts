@@ -36,8 +36,6 @@ export async function fetchMealData(url: string): Promise<MealInfo[]> {
             });
         });
 
-        // Return the list of meal data
-        console.log(mealList)
         return mealList;
     } catch (error) {
         console.error('Error fetching meal data:', error);

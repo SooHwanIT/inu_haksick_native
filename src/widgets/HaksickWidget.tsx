@@ -29,7 +29,7 @@ const DARK_THEME = {
     LIST_BORDER_COLOR: '#5a5a5a',
 };
 
-export function HaksickWidget({ data, type = 'student', theme }) {
+export function HaksickWidget({ data = [], type = 'student', theme = 'dark' }) {
     const headerHeight = 42;
     const headerFontSize = 14;
     const bodyFontSize = 16;
@@ -58,8 +58,7 @@ export function HaksickWidget({ data, type = 'student', theme }) {
         return item.cafeteria === type;
     });
 
-    const hasData = true;
-    // const hasData = sselectedRestaurant.length > 0 && selectedRestaurant[0].meals.length > 0;
+    const hasData = filteredData.length > 0;
 
     return (
         <FlexWidget
@@ -132,41 +131,6 @@ export function HaksickWidget({ data, type = 'student', theme }) {
                     <TextWidget
                         style={{ fontSize: headerFontSize, color: colors.TEXT_COLOR_BLACK }}
                         text='2호관 교직원 식당'
-                    />
-                </FlexWidget>
-                {/* Dining27 Restaurant */}
-                <FlexWidget
-                    clickAction="CHANGE_MENU"
-                    clickActionData={{ id: '27호관 식당' }}
-                    style={{
-                        height: headerHeight,
-                        justifyContent: 'center',
-                        backgroundColor: type === '27호관 식당' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
-                        paddingHorizontal: 12,
-                        flex: 1,
-                    }}
-                >
-                    <TextWidget
-                        style={{ fontSize: headerFontSize, color: colors.TEXT_COLOR_BLACK }}
-                        text="27호관 식당"
-                    />
-                </FlexWidget>
-                {/*사범대 식당*/}
-                <FlexWidget
-                    clickAction="CHANGE_MENU"
-                    clickActionData={{ id: '사범대 식당' }}
-                    style={{
-                        height: headerHeight,
-                        justifyContent: 'center',
-                        backgroundColor: type === '사범대 식당' ? colors.HEADER_SELECTED_COLOR : colors.HEADER_UNSELECTED_COLOR,
-                        paddingHorizontal: 12,
-                        // borderTopRightRadius: 12,
-                        flex: 1,
-                    }}
-                >
-                    <TextWidget
-                        style={{ fontSize: headerFontSize, color: colors.TEXT_COLOR_BLACK }}
-                        text="사범대 식당"
                     />
                 </FlexWidget>
                 {/* Dorm1 Restaurant */}
